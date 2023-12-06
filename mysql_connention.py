@@ -1,12 +1,14 @@
 import mysql.connector
 
+from config import Config
+
 # 파이썬으로 mysql에 접속할 수 있는 함수.
 
 def get_connection() :
     connection = mysql.connector.connect(
-        host = 'ygdb.c55fwwwu95sx.ap-northeast-2.rds.amazonaws.com',
-        database = 'recipe_db',
-        user = 'recipe_db_user',
-        password = '0827'
+        host = Config.HOST,
+        database = Config.DATABASE,
+        user = Config.DB_USER,
+        password = Config.DB_PASSWORD
     )
     return connection
