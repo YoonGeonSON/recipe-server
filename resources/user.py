@@ -32,7 +32,7 @@ class UserRegisterResource(Resource) :
         # 만약, 비번이 4자리 이상 14자리 이하라고 한다면
         # 이런것을 여기서 체크한다.
         if len (data['password']) < 4 or len (data['password']) > 14 :
-            return {'eroor' : '비번길이가 올바르지 않습니다.'}, 400
+            return {'error' : '비번길이가 올바르지 않습니다.'}, 400
         
         # 4. 비밀번호를 암호화 한다.
         password = hash_password(data['password'])
