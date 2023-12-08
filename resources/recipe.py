@@ -194,13 +194,15 @@ class RecipeResource(Resource) :
     # "directions": "계란을 잘 풀어서 잘 익혀서 잘 만든다"
 # }
     
-    
+    @jwt_required()
     def put(self, recipe_id) :
             
             # 1. 클라이언트로부터 데이터를 받아온다.
 
             # body 에 들어있는 json 데이터
             data = request.get_json()
+
+            user_id = get_jwt_identity()
 
             # 레시피 테이블의 아이디가 저장되어있는 변수 : recipe_id
 
@@ -214,13 +216,14 @@ class RecipeResource(Resource) :
                             num_of_servings = %s,
                             cook_time = %s,
                             directions = %s
-                        where id = %s;'''                
+                        where id = %s and user_id =  %s;'''                
                 record = (data['name'],
                           data['description'],
                           data['num_of_servings'],
                           data['cook_time'],
                           data['directions'],
-                          recipe_id)
+                          recipe_id,
+                          user_id)
 
                 cursor = connection.cursor()
                 cursor.execute(query, record)
@@ -240,18 +243,21 @@ class RecipeResource(Resource) :
 
     ### restful API에서 
     ## get,delete 메소드는 절대 body에 데이터를 전달하지 않습니다.
+    @jwt_required
     def delete(self, recipe_id) :
             
             # 1. 클라이언트로 부터 데이터를 받아온다
             # 이미 recipe_id 받아옴
+
+            user_id = get_jwt_identity()
 
             # 2. 테이블에서 해당 레시피를 삭제한다
             try :
                 connection = get_connection()
             
                 query = '''delete from recipe
-                            where id =%s;'''
-                record = (recipe_id, )
+                            where id =%s and user_id = %s;'''
+                record = (recipe_id, user_id)
 
                 cursor = connection.cursor()
 
